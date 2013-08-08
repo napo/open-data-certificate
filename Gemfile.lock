@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/theodi/alternate-rails.git
+  revision: 6845d0e36451fd61b907ae377be646ba2f983352
+  specs:
+    alternate_rails (0.0.1)
+      rails (~> 3.2.13)
+
+GIT
   remote: git://github.com/theodi/data_kitten.git
   revision: 8c988519acb036e295f3d7e25111b6a863d28c38
   specs:
@@ -321,6 +328,7 @@ PLATFORMS
 DEPENDENCIES
   aasm
   airbrake
+  alternate_rails!
   cancan
   coffee-rails (~> 3.2.1)
   data_kitten!
