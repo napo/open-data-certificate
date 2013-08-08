@@ -57,6 +57,17 @@ module ApplicationHelper
   def devise_mapping
     @devise_mapping ||= Devise.mappings[:user]
   end
+  
+  def alternate_button(format)
+
+    format_translation = t("formats.#{format}", :default => h(format))
+    link_to "#{format_translation.upcase}".html_safe, 
+        alternate_url(:format => format), 
+        :rel => 'alternate', 
+        :type => Mime::EXTENSION_LOOKUP[format.to_s].to_s,
+        :class => "badge",
+        :title => "Get this in #{format_translation} format"
+  end
 
   private
   def new_certificate_link_hash(options={})
