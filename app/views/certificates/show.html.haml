@@ -29,4 +29,6 @@
 
 =render @certificate.response_set
 
+%p.certificate-alternate Get this certificate as: #{alternate_link_buttons}
+
 =render :partial => 'shared/embed_code', :locals => {:certificate => @certificate}
