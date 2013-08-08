@@ -1,7 +1,9 @@
 .certificate.hero-unit{class: "#{@certificate.attained_level}-level"}
 
   - if @certificate.response_set.published?
-    = link_to(t("certificates.embed_this_on_your_site"), "#embed-#{@certificate.id}", :class => 'btn btn-small btn-info pull-right', 'data-toggle' => :modal)
+    %div.pull-right
+      = link_to(t("certificates.embed_this_on_your_site"), "#embed-#{@certificate.id}", :class => 'btn btn-small btn-info', 'data-toggle' => :modal)
+      = link_to("Get the data", "#data-#{@certificate.id}", :class => 'btn btn-small btn-info', 'data-toggle' => :modal)
   - elsif @certificate.response_set.draft?
     %ul.pull-right.unstyled
       %li
@@ -32,3 +34,4 @@
 %p.certificate-alternate Get this certificate as: #{alternate_link_buttons}
 
 =render :partial => 'shared/embed_code', :locals => {:certificate => @certificate}
+=render :partial => 'shared/certificate_data', :locals => {:certificate => @certificate}
