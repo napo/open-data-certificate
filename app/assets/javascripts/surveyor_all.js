@@ -367,10 +367,7 @@ $(document).ready(function(){
         // A service or API for accessing open data
         if (json.title.indexOf("API") >= 0 || json.description.indexOf("API") >= 0 ) {
           affectedFields.push(checkMe("releaseType", "service"))
-        }
-
-		// Rights statement
-		affectedFields.push(fillMe("copyrightURL", url))
+        }		
 
         // Rights information
         if (json.rights) {
@@ -416,6 +413,9 @@ $(document).ready(function(){
         } else if (json.licenses) {
           // Yes, you have the rights to publish this data as open data
           affectedFields.push(checkMe("publisherRights", "yes"))
+			
+		  // Rights statement
+		  affectedFields.push(fillMe("copyrightURL", url))
 
           // Data License
           switch(json.licenses[0].uri) {
