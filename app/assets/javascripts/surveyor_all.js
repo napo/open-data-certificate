@@ -345,16 +345,12 @@ $(document).ready(function(){
         // Title
         affectedFields.push(fillMe("dataTitle", json.title))
 
-        if (json.publishers.length > 0) {
-          // Publisher name
-          affectedFields.push(fillMe("publisher", json.publishers[0].name))
-          // Publisher URL
-          affectedFields.push(fillMe("publisherUrl", json.publishers[0].homepage))
-          // Contact email address
-          affectedFields.push(fillMe("contactEmail", json.publishers[0].mbox))
-        }
-
-        affectedFields.push(fillMe("publisherUrl", ' '))
+        // Publisher name
+        affectedFields.push(fillMe("publisher", json.publisher.name))
+        // Publisher URL
+        affectedFields.push(fillMe("publisherUrl", json.publisher.homepage))
+        // Contact email address
+        affectedFields.push(fillMe("contactEmail", json.publisher.mbox))
 
         // Data type
         if (json.update_frequency.length == 0 && json.distributions.length == 1) {
@@ -509,7 +505,7 @@ $(document).ready(function(){
         }
 
         // Publisher
-        if (json.publishers.length > 0) {
+        if (json.publisher.name.length > 0) {
           affectedFields.push(checkMe("documentationMetadata", "publisher"))
         }
 

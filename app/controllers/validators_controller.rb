@@ -26,12 +26,25 @@ class ValidatorsController < ApplicationController
           :structured  => distribution.format.structured?
         }
       }
-
+      
+      if dataset.publishers.first.homepage.blank?
+        uri = URI.parse(distributions.first[:access_url])
+        publisher_homepage = "#{uri.scheme}://#{uri.host}"
+      else
+        publisher_homepage = dataset.publishers.first.homepage
+      end
+      
+      publisher = {
+        :name => dataset.publishers.first.name,
+        :homepage => publisher_homepage,
+        :mbox => dataset.publishers.first.mbox,
+      }
+        
       render :json => {
         :data_exists       => true,
         :title             => dataset.data_title,
         :description       => dataset.description,
-        :publishers        => dataset.publishers,
+        :publisher         => publisher,
         :rights            => dataset.rights,
         :licenses          => dataset.licenses,
         :update_frequency  => dataset.update_frequency,
