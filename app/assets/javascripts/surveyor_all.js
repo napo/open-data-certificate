@@ -369,6 +369,9 @@ $(document).ready(function(){
           affectedFields.push(checkMe("releaseType", "service"))
         }
 
+		// Rights statement
+		affectedFields.push(fillMe("copyrightURL", url))
+
         // Rights information
         if (json.rights) {
           // Yes, you have the rights to publish this data as open data
