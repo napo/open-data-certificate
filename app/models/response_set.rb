@@ -49,7 +49,7 @@ class ResponseSet < ActiveRecord::Base
   scope :completed, where("response_sets.completed_at IS NOT NULL")
 
   def title
-    title_determined_from_responses || ResponseSet::DEFAULT_TITLE
+    dataset_title_determined_from_responses || ResponseSet::DEFAULT_TITLE
   end
 
   def jurisdiction
@@ -80,16 +80,65 @@ class ResponseSet < ActiveRecord::Base
     end
   end
 
-  def title_determined_from_responses
-    @title_determined_from_responses ||= value_for "dataset_title"
+  def method_missing(method_name, *args, &blk)
+    val = method_name.to_s.match(/(.+)_determined_from_responses/)
+    unless val.nil? and survey.map[val[1].to_sym].nil?
+      var = instance_variable_get("@#{method_name}")
+      var ||= value_for val[1]
+    else
+      super
+    end
   end
 
-  def curator_determined_from_responses
-    @curator_determined_from_responses ||= value_for "dataset_curator"
+  def data_licence_determined_from_responses
+    if @data_licence_determined_from_responses.nil? 
+      ref = value_for "data_licence", :reference_identifier
+      case ref
+      when "na"
+        @data_licence_determined_from_responses = {
+          :title => "Not Applicable",
+          :url => nil
+        }
+      when "other"
+         @data_licence_determined_from_responses = {
+          :title => value_for("other_dataset_licence_name"),
+          :url   => value_for("other_dataset_licence_url")
+         }
+      else
+        licence = Odlifier::License.new(ref.dasherize)
+        @data_licence_determined_from_responses = {
+          :title => licence.title,
+          :url   => licence.url
+        }
+      end
+    end
+    @data_licence_determined_from_responses
   end
   
-  def documentation_url_determined_from_responses
-    @documentation_url_determined_from_responses ||= value_for "dataset_documentation_url"
+  def content_licence_determined_from_responses
+    if @content_licence_determined_from_responses.nil? 
+      ref = value_for "content_licence", :reference_identifier
+      case ref
+      when "na"
+        @content_licence_determined_from_responses = {
+          :title => "Not Applicable",
+          :url => nil
+        }
+      when "other"
+         @content_licence_determined_from_responses = {
+          :title => value_for("other_content_licence_name"),
+          :url   => value_for("other_content_licence_url") 
+         }
+      else
+        licence = Odlifier::License.new(ref.dasherize)
+        @content_licence_determined_from_responses = {
+          :title => licence.title,
+          :url   => licence.url
+        }
+      end
+    else
+      @content_licence_determined_from_responses
+    end
   end
 
   def incomplete?
@@ -254,8 +303,8 @@ class ResponseSet < ActiveRecord::Base
 
   # finds the string value for a given response_identifier
   private
-  def value_for reference_identifier
-    responses.joins(:question).where(questions: {reference_identifier: survey.meta_map[reference_identifier.to_sym]}).first.try(:string_value)
+  def value_for reference_identifier, value = :string_value
+    q = responses.joins(:question).where(questions: {reference_identifier: survey.meta_map[reference_identifier.to_sym]}).first.try(value)
   end
 
 end
